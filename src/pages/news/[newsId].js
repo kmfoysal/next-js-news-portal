@@ -7,8 +7,19 @@ import {
 } from "@ant-design/icons";
 import { Col, Row } from 'antd';
 import Image from 'next/image';
+import { useGetSingleNewsQuery } from '../redux/api/apiSlice';
+import { useRouter } from 'next/router';
 
-const NewsDetailsPage = ({news}) => {
+const NewsDetailsPage = () => {
+
+    const router = useRouter();
+  const { newsId } = router.query;
+
+  console.log(router);
+    
+    const {data:news} = useGetSingleNewsQuery(newsId);
+
+
     return (
         <Row style={{ marginTop: "80px", alignItems: "center" }}>
     <Col md={6} lg={12}>
@@ -75,47 +86,3 @@ export default NewsDetailsPage;
 NewsDetailsPage.getLayout = function getLayout(page) {
     return <RootLayout>{page}</RootLayout>;
   };
-
-//   export const getStaticPaths = async () => {
-    
-//     const res = await fetch('http://localhost:5000/news');
-//     const newses = await res.json();
-
-//     const paths = newses.map((news) => ({
-//         params: { newsId : (news.id).toString()}
-//     }))
-
-//     return {paths, fallback:false}
-//   }
-
-
-//   export const getStaticProps = async (context) => {
-
-//     const {params} = context ;
-
-
-//     const res = await fetch(`http://localhost:5000/news/${params.newsId}`);
-//     const data = await res.json();
-
-//     return {
-//         props: {
-//             news: data
-//         }
-//     }
-//   }
-
-
-  export const getServerSideProps = async (context) => {
-
-    const {params} = context ;
-
-
-    const res = await fetch(`http://localhost:5000/news/${params.newsId}`);
-    const data = await res.json();
-
-    return {
-        props: {
-            news: data
-        }
-    }
-  }
